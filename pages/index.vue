@@ -1,73 +1,40 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        turbo69
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+<div>
+        <navigation/>
+        <head-video/>
+        <div class="container">
+            <info/>
+            <h2 class="text-center mb-3">Как мы ремнотируем</h2>
+            <hr>
+            <how-repair/>
+            <h2 class="text-center mb-3">Стоимость ремонта</h2>
+            <hr>
+            <pricing/>
+            <section class="container">
+              <div v-if="isMounted">
+                <yandex-map :coords="[56.864974, 35.980006]" zoom="16" class="map">
+                  <ymap-marker markerId="123" marker-type="placemark" hint-content="TURBO69" :coords="[56.864974, 35.980006]"></ymap-marker>
+                </yandex-map>
+              </div>
+            </section>
+        </div>
+        <foot/>
     </div>
-  </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data: () => ({
+    isMounted: false
+  }),
+  mounted() {
+    this.isMounted = true;
+  }
+}
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.ymap-container {
+  height: 600px;
 }
 </style>

@@ -21,6 +21,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/ymapPlugin.js', mode: 'client' },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -28,12 +29,30 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    '@nuxtjs/device',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
+    [
+      '@nuxtjs/firebase',
+      {
+        config: {
+          apiKey: "AIzaSyBY8qMOWmME69kRcY01XfWwG88XrKMTkBE",
+          authDomain: "turbo69-tver.firebaseapp.com",
+          databaseURL: "https://turbo69-tver-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "turbo69-tver",
+          storageBucket: "turbo69-tver.appspot.com",
+          messagingSenderId: "713809823122",
+          appId: "1:713809823122:web:828c48b9903c400d86ad4b"
+        },
+        services: {
+          firestore: true,
+        }
+      }
+    ]
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
