@@ -4,7 +4,7 @@
         <h2>Восстановление турбокомпрессоров</h2>
         <hr>
         <p>Из практики известно, что полностью отремонтированная турбина прослужит не хуже чем новая. Опыт наблюдения показывает, что разница в сроке эксплуатации между новым и восстановленным турбокомпрессором несущественна или вовсе отсутствует. К тому же, уже достаточно много турбин затруднительно приобрести, а иногда просто невозможно найти по причине снятия таковых с производства.</p>
-        <button v-if="$device.isDesktop" @click="$bvModal.show('bv-modal-form')" class="btn btn-primary btn-lg">Отправить заявку &raquo;</button>
+        <button v-if="$device.isDesktop" @click="$bvModal.show('bv-modal-info-form')" class="btn btn-primary btn-lg">Отправить заявку &raquo;</button>
         <nuxt-link v-else class="btn btn-primary btn-lg" to="/incom">Отправить заявку &raquo;</nuxt-link>
       </div>
       <div class="col-md-4 mb-5">
@@ -24,7 +24,7 @@
           <a href="mailto:tverturbo@yandex.ru">tverturbo@yandex.ru</a>
         </address>
       </div>
-      <b-modal id="bv-modal-form" hide-footer>
+      <b-modal id="bv-modal-info-form" hide-footer>
           <template #modal-title>Заявка на ремонт</template>
           <div class="d-block text-center">
             <div role="group">
@@ -39,7 +39,8 @@
               <b-form-input
                 id="input-live"
                 v-model="form.phone"
-                placeholder="Enter your name"
+                placeholder="+7(999)888-7766"
+                v-facade="'+7(###)###-####'"
               />
               <b-form-text id="input-live-help">+7 добавляется автоматически.</b-form-text>
               <b-button class="mt-3" variant="primary" block @click="sentIncom(form)">Отправить</b-button>
@@ -47,19 +48,19 @@
             
           </div>
           
-          <b-button class="mt-3" @click="$bvModal.hide('bv-modal-form')">Закрыть</b-button>
+          <b-button class="mt-3" @click="$bvModal.hide('bv-modal-info-form')">Закрыть</b-button>
         </b-modal>
 
 
-        <b-modal id="bv-modal-sented" hide-footer>
+        <b-modal id="bv-modal-info-sented" hide-footer>
           <template #modal-title>Заявка на ремонт</template>
           <div class="d-block text-center">
             <h2>Заявка отправлена</h2>
-            <h3>Спасибо, {{form.name}}, что обратились к нам!</h3>
-            <h3>В ближайшее время мы позвоним Вам по номеру {{form.phone}}!</h3>
+            <h3>Спасибо, <b>{{form.name}}</b>, что обратились к нам!</h3>
+            <h3>В ближайшее время мы позвоним Вам по номеру <b>{{form.phone}}</b>!</h3>
           </div>
         
-          <b-button class="mt-3" @click="$bvModal.hide('bv-modal-sented')">Закрыть</b-button>
+          <b-button class="mt-3" @click="$bvModal.hide('bv-modal-info-sented')">Закрыть</b-button>
         </b-modal>
     </div>
 </template>
@@ -84,8 +85,8 @@
                 status: 'new',
                 createAt: Date.now()
               })
-              this.$bvModal.hide('bv-modal-form')
-              this.$bvModal.show('bv-modal-sented')
+              this.$bvModal.hide('bv-modal-info-form')
+              this.$bvModal.show('bv-modal-info-sented')
             } catch (e) {
             alert(e)
             return

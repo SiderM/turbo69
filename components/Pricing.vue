@@ -1,7 +1,7 @@
 <template>
     <div class="row">
       <div v-for="(item, key) of pricing" :key="key" class="col-md-3 mb-5 mx-auto">
-        <div class="card h-100">
+        <div class="card h-100 shadow">
           <div class="card-body">
             <h6 class="card-subtitle mb-2 text-muted">{{item.title}}</h6>
             <h5 class="card-title mt-3">от {{item.price}}<span><img src="https://img.icons8.com/metro/30/000000/ruble.png"/></span></h5>
@@ -35,7 +35,8 @@
               <b-form-input
                 id="input-live"
                 v-model="form.phone"
-                placeholder="Enter your name"
+                placeholder="+7(999)888-7766"
+                v-facade="'+7(###)###-####'"
               />
               <b-form-text id="input-live-help">+7 добавляется автоматически.</b-form-text>
               <b-button class="mt-3" variant="primary" block @click="sentIncom(form)">Отправить</b-button>
@@ -51,8 +52,8 @@
           <template #modal-title>Заявка на ремонт</template>
           <div class="d-block text-center">
             <h2>Заявка отправлена</h2>
-            <h3>Спасибо, {{form.name}}, что обратились к нам!</h3>
-            <h3>В ближайшее время мы позвоним Вам по номеру {{form.phone}}!</h3>
+            <h3>Спасибо, <b>{{form.name}}</b>, что обратились к нам!</h3>
+            <h3>В ближайшее время мы позвоним Вам по номеру <b>{{form.phone}}</b>!</h3>
           </div>
         
           <b-button class="mt-3" @click="$bvModal.hide('bv-modal-sented')">Закрыть</b-button>
