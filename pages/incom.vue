@@ -1,54 +1,72 @@
 <template>
-    <div>
-        
+  <div>
     <form v-if="!sented" class="form-signin" @submit.prevent="sentIncom(form)">
       <nuxt-link to="/">На главную</nuxt-link>
       <h1 class="h3 my-3 font-weight-normal">Заявка на ремонт</h1>
       <label for="inputEmail" class="sr-only">Вше имя</label>
-      <input type="text" v-model="form.name" id="inputEmail" class="form-control" placeholder="Александр" required autofocus>
+      <input
+        type="text"
+        v-model="form.name"
+        id="inputEmail"
+        class="form-control"
+        placeholder="Александр"
+        required
+        autofocus
+      />
       <label for="inputPassword" class="sr-only">Номер телефона</label>
-      <input type="text" v-model="form.phone" id="inputPassword" class="form-control mt-3" placeholder="+7длпдв" required>
-      <div class="checkbox mb-3">
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Отправить</button>
+      <input
+        type="text"
+        v-facade="'+7(###)###-####'"
+        v-model="form.phone"
+        id="inputPassword"
+        class="form-control mt-3"
+        placeholder="+7(999)888-7766"
+        required
+      />
+      <div class="checkbox mb-3"></div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
+        Отправить
+      </button>
     </form>
     <div v-else class="ml-auto">
-        <nuxt-link to="/">На главную</nuxt-link>
-        <h1 class="h3 my-3 font-weight-normal">Заявка отправлена</h1>
-            <h3>Спасибо, {{form.name}}, что обратились к нам!</h3>
-            <h3>В ближайшее время мы позвоним Вам по номеру {{form.phone}}!</h3>
+      <nuxt-link to="/">На главную</nuxt-link>
+      <h1 class="h3 my-3 font-weight-normal">Заявка отправлена</h1>
+      <h3>Спасибо, {{ form.name }}, что обратились к нам!</h3>
+      <h3>В ближайшее время мы позвоним Вам по номеру {{ form.phone }}!</h3>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                form: {
-                    name: '',
-                    phone: ''
-                },
-                sented: false
-            }
-        },
-         methods: {
-          async sentIncom(form) {
-            const messageRef = this.$fire.firestore.collection('incoms').doc(form.phone)
-            try {
-              await messageRef.set({
-                ...form,
-                status: 'new',
-                createAt: Date.now()
-              })
-              this.sented = true
-            } catch (e) {
-            alert(e)
-            return
-            }
-          }
-        }
-    }
+export default {
+  data() {
+    return {
+      form: {
+        name: "",
+        phone: "",
+      },
+      sented: false,
+    };
+  },
+  methods: {
+    async sentIncom(form) {
+      const messageRef = this.$fire.firestore
+        .collection("incoms")
+        .doc(form.phone);
+      try {
+        await messageRef.set({
+          ...form,
+          status: "new",
+          createAt: Date.now(),
+        });
+        this.sented = true;
+      } catch (e) {
+        alert(e);
+        return;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
