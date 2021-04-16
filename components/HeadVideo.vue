@@ -1,14 +1,27 @@
 <template>
-    <header class="bg-primary py-5 mb-5">
-      <div class="overlay"></div>
-      <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
-    <source src="https://media.istockphoto.com/videos/structure-of-new-automotive-turbines-to-increase-engine-power-video-id1159146595" type="video/mp4">
-  </video>
+  <header class="bg-primary py-5 mb-5">
+    <div class="overlay"></div>
+    <video
+      playsinline="playsinline"
+      autoplay="autoplay"
+      muted="muted"
+      loop="loop"
+    >
+      <source
+        src="https://media.istockphoto.com/videos/structure-of-new-automotive-turbines-to-increase-engine-power-video-id1159146595"
+        type="video/mp4"
+      />
+    </video>
     <div class="container h-100">
       <div class="row h-100 align-items-center">
         <div class="col-lg-12">
-          <h1 class="display-4 text-white mt-5 mb-2">Заводской ремонт турбокомпрессоров</h1>
-          <p class="lead mb-5 text-white">Если турбиная дуть больше не может, отправьте заявку и мы Вам поможем!</p>
+          <h1 class="display-4 text-white mt-5 mb-2">
+            Заводской ремонт турбокомпрессоров
+          </h1>
+          <p class="lead mb-5 text-white">
+            Если турбина дуть больше не может, отправьте заявку, и мы Вам
+            поможем!
+          </p>
         </div>
       </div>
     </div>
@@ -16,9 +29,9 @@
 </template>
 
 <script>
-    export default {
-        name: 'HeadVideo'
-    }
+export default {
+  name: "HeadVideo",
+};
 </script>
 
 <style scoped>
