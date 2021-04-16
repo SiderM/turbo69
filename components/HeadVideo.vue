@@ -16,7 +16,7 @@
       <div class="row h-100 align-items-center">
         <div class="col-lg-12">
           <h1 class="display-4 text-white mt-5 mb-2">
-            Заводской ремонт турбокомпрессоров
+            Заводской ремонт турбин
           </h1>
           <p class="lead mb-5 text-white">
             Если турбина дуть больше не может, отправьте заявку, и мы Вам
