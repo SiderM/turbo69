@@ -1,20 +1,54 @@
 <template>
     <div v-if="mounted">
-        Заказ №{{orderData.id}}
-        <b-button size="sm" variant="success" @click="closeOrder">Выдан</b-button>
-        <ul>
-            <li>{{orderData.name}}</li>
-            <li>{{orderData.phone}}</li>
-        </ul>
-        <p>Турбина: <b>{{ orderData.turbine.Turbo_Maker}} {{orderData.turbine.Turbo_Model}}</b></p>
-        <p>Запчасти</p>
-        <ul>
-            <li>Ремкомплект: <b>{{orderData.turbine.Service_kits}}</b> <span class="badge badge-info">Есть на складе</span></li>
-            <li>Картридж: <b>{{orderData.turbine.CHRA}}</b> <span class="badge badge-danger">Нет на складе</span></li>
-            <li>Корпус: <b>{{orderData.turbine.BH}}</b> <span class="badge badge-danger">Нет на складе</span></li>
-            <li>Вал: <b>{{orderData.turbine.SW}}</b> <span class="badge badge-danger">Нет на складе</span></li>
-            <li>Колесо: <b>{{orderData.turbine.CW}}</b> <span class="badge badge-danger">Нет на складе</span></li>
-        </ul>
+        <b-card :title="`Заказ №${orderData.id}`">
+            <b-card-sub-title class="mb-2">
+                <span :class="{
+                    ['text-primary']: orderData.status == 'Новый',
+                    ['text-info']: orderData.status == 'Ждет запчасти',
+                    ['text-warning']: orderData.status == 'Готов',
+                    ['text-success']: orderData.status == 'Выдан'
+                }">{{orderData.status}}</span>
+            </b-card-sub-title>
+            <b-row>
+                <b-col>
+                    <b-card-text>
+                        <p>Дата приема: <b>{{new Date(orderData.createAt).toLocaleString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' })}}</b></p>
+                        <p>Имя: <b>{{orderData.name}}</b></p>
+                        <p>Телефон: <b>{{orderData.phone}}</b></p>
+                        <p>Турбина: <b>{{ orderData.turbine.Turbo_Maker}} {{orderData.turbine.Turbo_Model}}</b></p>
+                    </b-card-text>
+                </b-col>
+                <b-col>
+                    <b-card-text>
+                        <b-list-group>
+                            <b-list-group-item class="d-flex justify-content-between align-items-center">
+                                <span>Ремкомплект: <b>{{orderData.turbine.Service_kits}}</b></span>
+                                <b-badge variant="success" pill>Есть на складе</b-badge>
+                            </b-list-group-item>
+                            <b-list-group-item class="d-flex justify-content-between align-items-center">
+                                <span>Картридж: <b>{{orderData.turbine.CHRA}}</b></span>
+                                <b-badge variant="danger" pill>Нет на складе</b-badge>
+                            </b-list-group-item>
+                            <b-list-group-item class="d-flex justify-content-between align-items-center">
+                                <span>Корпус: <b>{{orderData.turbine.BH}}</b></span>
+                                <b-badge variant="danger" pill>Нет на складе</b-badge>
+                            </b-list-group-item>
+                            <b-list-group-item class="d-flex justify-content-between align-items-center">
+                                <span>Вал: <b>{{orderData.turbine.SW}}</b></span>
+                                <b-badge variant="danger" pill>Нет на складе</b-badge>
+                            </b-list-group-item>
+                            <b-list-group-item class="d-flex justify-content-between align-items-center">
+                                <span>Колесо: <b>{{orderData.turbine.CW}}</b></span>
+                                <b-badge variant="danger" pill>Нет на складе</b-badge>
+                            </b-list-group-item>
+                        </b-list-group>
+                    </b-card-text>
+                </b-col>
+            </b-row>
+            <b-button size="sm" variant="info" @click="setOrderStatus('Ждет запчасти')">Ждет запчасти</b-button>
+            <b-button size="sm" variant="warning" @click="setOrderStatus('Готов')">Готов</b-button>
+            <b-button size="sm" variant="success" @click="setOrderStatus('Выдан')">Выдан</b-button>
+        </b-card>
     </div>
 </template>
 
@@ -29,21 +63,21 @@
         },
         methods: {
           async getOrder() {
-            const messageRef = this.$fire.firestore.collection('orders')
+            const collection = this.$fire.firestore.collection('orders')
             try {
-              const messageDoc = await messageRef.doc(this.$route.params.id).get()
-              this.orderData = messageDoc.data()
-              this.mounted = true
-              console.log(this.orderData)
+              const orderDoc = await collection.doc(this.$route.params.id).onSnapshot(doc => {
+                this.orderData = doc.data()
+                this.mounted = true
+              })
             } catch (e) {
             alert(e)
             return
             }
           },
-          async closeOrder() {
-              const res = await this.$fire.firestore.collection('orders').doc(this.$route.params.id).set({
+          async setOrderStatus(status) {
+              await this.$fire.firestore.collection('orders').doc(this.$route.params.id).set({
                   ...this.orderData,
-                  status: 'Выдан'
+                  status
               });
           }
         },

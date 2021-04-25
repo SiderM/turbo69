@@ -1,8 +1,41 @@
 <template>
-  <div>
+  <div v-if="mounted">
     <b-row>
-      <b-col sm="8">col-sm-8</b-col>
-      <b-col sm="4">col-sm-4</b-col>
+      <b-col>
+        <b-card header="Всего заказов" class="text-center">
+          <b-card-text>
+            <h1>{{ordersList.length}}</h1>
+          </b-card-text>
+        </b-card>
+      </b-col>
+      <b-col>
+        <b-card header="Новых заказов" header-bg-variant="primary" header-text-variant="white" class="text-center">
+          <b-card-text>
+            <h1>{{ordersStatus.new}}</h1>
+          </b-card-text>
+        </b-card>
+      </b-col>
+      <b-col>
+        <b-card header="Ждет запчасти" header-bg-variant="info" header-text-variant="white" class="text-center">
+          <b-card-text>
+            <h1>{{ordersStatus.zap}}</h1>
+          </b-card-text>
+        </b-card>
+      </b-col>
+      <b-col>
+        <b-card header="Готов" header-bg-variant="warning" class="text-center">
+          <b-card-text>
+            <h1>{{ordersStatus.complete}}</h1>
+          </b-card-text>
+        </b-card>
+      </b-col>
+      <b-col>
+        <b-card header="Выдан" header-bg-variant="success" header-text-variant="white" class="text-center">
+          <b-card-text>
+            <h1>{{ordersStatus.done}}</h1>
+          </b-card-text>
+        </b-card>
+      </b-col>
     </b-row>
     <b-row class="my-2">
       <b-col>
@@ -12,7 +45,7 @@
     <b-row>
       <b-col>
         <b-card title="Заказы">
-          <b-table sticky-header="50vh" hover :busy="isBusy" :items="ordersList" :fields="fields">
+          <b-table sticky-header="50vh" hover :busy="loading" :items="ordersList" :fields="fields">
             <template #table-busy>
               <div class="text-center text-primary my-2">
                 <b-spinner class="align-middle"></b-spinner>
@@ -20,7 +53,12 @@
               </div>
             </template>
             <template #cell(status)="data">
-              <span class="badge" :class="{['badge-info']: data.item.status == 'Новый', ['badge-success']: data.item.status == 'Выдан'}">{{ data.item.status}}</span>
+              <span class="badge" :class="{
+                ['badge-primary']: data.item.status == 'Новый',
+                ['badge-info']: data.item.status == 'Ждет запчасти',
+                ['badge-warning']: data.item.status == 'Готов',
+                ['badge-success']: data.item.status == 'Выдан'
+                }">{{ data.item.status}}</span>
             </template>
              <template #cell(created)="data">
               <p>{{data.item.created.toLocaleString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' })}}</p>
@@ -41,7 +79,14 @@
         data() {
           return {
             ordersList: [],
-            isBusy: true,
+            ordersStatus: {
+              new: 0,
+              zap: 0,
+              complete: 0,
+              done: 0
+            },
+            mounted: false,
+            loading: true,
             fields: [
               { key: 'id', label: 'Номер' },
               { key: 'name', label: 'Имя'},
@@ -55,10 +100,10 @@
         },
         methods: {
           async getOrders() {
-            const messageRef = this.$fire.firestore.collection('orders')
+            const collection = this.$fire.firestore.collection('orders')
             try {
-              const messageDoc = await messageRef.orderBy('id', 'desc').get()
-              messageDoc.forEach(element => {
+              const ordersDoc = await collection.orderBy('id', 'desc').get()
+              ordersDoc.forEach(element => {
                 this.ordersList.push({
                   link: element.id,
                   id: element.data().id,
@@ -67,17 +112,35 @@
                   turbine: `${element.data().turbine.Turbo_Maker} ${element.data().turbine.Turbo_Model}`,
                   status: element.data().status,
                   created: new Date(element.data().createAt)
-                })
-                this.isBusy = false
+                })                
               });
+              this.loading = false
+              this.ordersList.forEach(item => {
+                switch(item.status) {
+                  case 'Новый':
+                    this.ordersStatus.new++
+                    break;
+                  case 'Ждет запчасти':
+                    this.ordersStatus.zap++
+                    break;
+                  case 'Готов':
+                    this.ordersStatus.complete++
+                    break;
+                  case 'Выдан':
+                    this.ordersStatus.done++
+                    break;
+                }
+              })
             } catch (e) {
             alert(e)
             return
             }
-          }
+          },
+          
         },
         mounted() {
           this.getOrders()
+          this.mounted = true
         }
     }
 </script>

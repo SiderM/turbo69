@@ -108,13 +108,13 @@ export default {
   },
   methods: {
     async sentIncom(form) {
-      const messageRef = this.$fire.firestore
-        .collection("incoms")
-        .doc(form.phone);
+      const messageRef = this.$fire.firestore.collection("incoms")
       try {
-        await messageRef.set({
-          ...form,
-          status: "new",
+        const res = await messageRef.add({
+          id: await messageRef.get().then((res) => res.size + 1),
+          name: form.name,
+          phone: form.phone,
+          status: "Новая",
           createAt: Date.now(),
         });
         this.$bvModal.hide("bv-modal-info-form");

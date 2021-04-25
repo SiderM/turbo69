@@ -76,30 +76,29 @@ export default {
   methods: {
       getTurbine() {
                 this.$axios.$get('/parts.json').then(response => this.turbineList = response)
-            },
-            selectTurbine(item) {
-                this.turbine = item
-                this.selected = true
-            },
-            async saveOrder() {
-                const messageRef = this.$fire.firestore
-                    .collection("orders")
-                try {
-                    const res = await messageRef.add({
-                      id: await messageRef.get().then((res) => res.size + 1),
-                      name: this.name,
-                      phone: this.phone,
-                      status: 'Новый',
-                      turbine: this.turbine,
-                      createAt: Date.now()
-                    })
-                    this.saved = true
-                    this.orderID = res.id
-                } catch (e) {
-                    alert(e);
-                    return;
-                }
-    },
+      },
+      selectTurbine(item) {
+        this.turbine = item
+        this.selected = true
+      },
+      async saveOrder() {
+        const messageRef = this.$fire.firestore.collection("orders")
+        try {
+          const res = await messageRef.add({
+            id: await messageRef.get().then((res) => res.size + 1),
+            name: this.name,
+            phone: this.phone,
+            status: 'Новый',
+            turbine: this.turbine,
+            createAt: Date.now()
+          })
+          this.saved = true
+          this.orderID = res.id
+        } catch (e) {
+          alert(e);
+          return;
+        }
+      },
   },
     mounted() {
         this.getTurbine()
