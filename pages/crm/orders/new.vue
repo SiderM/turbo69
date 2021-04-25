@@ -26,7 +26,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Сохранить</button>
       </form>
-      <b-alert v-if="saved" variant="success" show>Сохранено <NuxtLink :to="`/crm/orders/${orderID}`"><b-button size="sm" variant="primary">Открыть</b-button></NuxtLink></b-alert>
     </div>
     <div class="col">
         <div class="list-group" v-if="query != '' && filteredParts.length > 0">
@@ -57,7 +56,6 @@ export default {
       turbine: {},
       selected: false,
       turbineList: [],
-      saved: false,
       orderID: ''
     };
   },
@@ -75,7 +73,7 @@ export default {
         },
   methods: {
       getTurbine() {
-                this.$axios.$get('/parts.json').then(response => this.turbineList = response)
+                this.$axios.$get('/turbine.json').then(response => this.turbineList = response)
       },
       selectTurbine(item) {
         this.turbine = item
@@ -92,8 +90,7 @@ export default {
             turbine: this.turbine,
             createAt: Date.now()
           })
-          this.saved = true
-          this.orderID = res.id
+          this.$router.push(`/crm/orders/${res.id}`)
         } catch (e) {
           alert(e);
           return;

@@ -5,10 +5,13 @@
       </div>
       <ul class="c-sidebar-nav">
         <li class="c-sidebar-nav-item">
+          <NuxtLink class="c-sidebar-nav-link" to="/crm/incoms">Заявки<span class="badge badge-info">{{newIncomCount}}</span></NuxtLink>
+        </li>
+        <li class="c-sidebar-nav-item">
           <NuxtLink to="/crm/orders" class="c-sidebar-nav-link">Заказы</NuxtLink>
         </li>
         <li class="c-sidebar-nav-item">
-          <NuxtLink class="c-sidebar-nav-link" to="/crm/incoms">Заявки<span class="badge badge-info">{{newIncomCount}}</span></NuxtLink>
+          <NuxtLink class="c-sidebar-nav-link" to="/crm/box">Склад</NuxtLink>
         </li>
       </ul>
   </div>

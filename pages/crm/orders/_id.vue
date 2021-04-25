@@ -21,26 +21,43 @@
                 <b-col>
                     <b-card-text>
                         <b-list-group>
+
                             <b-list-group-item class="d-flex justify-content-between align-items-center">
-                                <span>Ремкомплект: <b>{{orderData.turbine.Service_kits}}</b></span>
-                                <b-badge variant="success" pill>Есть на складе</b-badge>
+                                <span>Ремкомплект: <b v-if="orderData.turbine.Service_kits">{{orderData.turbine.Service_kits}}</b><b v-else>Нет данных</b></span>
+                                <b-badge v-if="partsStatus.sk" variant="success" pill>Есть на складе</b-badge>
+                                <b-badge v-else variant="danger" pill>Нет на складе</b-badge>
                             </b-list-group-item>
+
                             <b-list-group-item class="d-flex justify-content-between align-items-center">
-                                <span>Картридж: <b>{{orderData.turbine.CHRA}}</b></span>
-                                <b-badge variant="danger" pill>Нет на складе</b-badge>
+                                <span>Корпус: <b v-if="orderData.turbine.BH">{{orderData.turbine.BH}}</b><b v-else>Нет данных</b></span>
+                                <b-badge v-if="partsStatus.bh" variant="success" pill>Есть на складе</b-badge>
+                                <b-badge v-else variant="danger" pill>Нет на складе</b-badge>
                             </b-list-group-item>
+
                             <b-list-group-item class="d-flex justify-content-between align-items-center">
-                                <span>Корпус: <b>{{orderData.turbine.BH}}</b></span>
-                                <b-badge variant="danger" pill>Нет на складе</b-badge>
+                                <span>Вал: <b v-if="orderData.turbine.SW">{{orderData.turbine.SW}}</b><b v-else>Нет данных</b></span>
+                                <b-badge v-if="partsStatus.sw" variant="success" pill>Есть на складе</b-badge>
+                                <b-badge v-else variant="danger" pill>Нет на складе</b-badge>
                             </b-list-group-item>
+
                             <b-list-group-item class="d-flex justify-content-between align-items-center">
-                                <span>Вал: <b>{{orderData.turbine.SW}}</b></span>
-                                <b-badge variant="danger" pill>Нет на складе</b-badge>
+                                <span>Колесо: <b v-if="orderData.turbine.CW">{{orderData.turbine.CW}}</b><b v-else>Нет данных</b></span>
+                                <b-badge v-if="partsStatus.cw" variant="success" pill>Есть на складе</b-badge>
+                                <b-badge v-else variant="danger" pill>Нет на складе</b-badge>
                             </b-list-group-item>
+
                             <b-list-group-item class="d-flex justify-content-between align-items-center">
-                                <span>Колесо: <b>{{orderData.turbine.CW}}</b></span>
-                                <b-badge variant="danger" pill>Нет на складе</b-badge>
+                                <span>Задняя крышка: <b v-if="orderData.turbine.Seal_Plates">{{orderData.turbine.Seal_Plates}}</b><b v-else>Нет данных</b></span>
+                                <b-badge v-if="partsStatus.sp" variant="success" pill>Есть на складе</b-badge>
+                                <b-badge v-else variant="danger" pill>Нет на складе</b-badge>
                             </b-list-group-item>
+
+                            <b-list-group-item class="d-flex justify-content-between align-items-center">
+                                <span>Картридж: <b v-if="orderData.turbine.CHRA">{{orderData.turbine.CHRA}}</b><b v-else>Нет данных</b></span>
+                                <b-badge v-if="partsStatus.chra" variant="success" pill>Есть на складе</b-badge>
+                                <b-badge v-else variant="danger" pill>Нет на складе</b-badge>
+                            </b-list-group-item>
+
                         </b-list-group>
                     </b-card-text>
                 </b-col>
@@ -58,17 +75,44 @@
         data() {
             return {
                 orderData: {},
+                partsStatus: {
+                    sk: false,
+                    bh: false,
+                    sw: false,
+                    cw: false,
+                    sp: false,
+                    chra: false
+                },
                 mounted: false
             }
         },
         methods: {
           async getOrder() {
-            const collection = this.$fire.firestore.collection('orders')
+            const collection = await this.$fire.firestore.collection('orders')
+            const parts_collection = await this.$fire.firestore.collection('parts')
             try {
-              const orderDoc = await collection.doc(this.$route.params.id).onSnapshot(doc => {
+                const orderDoc = await collection.doc(this.$route.params.id).onSnapshot(doc => {
                 this.orderData = doc.data()
+                parts_collection.doc(this.orderData.turbine.Service_kits).get().then(doc => {
+                    this.partsStatus.sk = (doc.data().qty && (doc.data().qty > 0)) ? true : false
+                })
+                parts_collection.doc(this.orderData.turbine.BH).get().then(doc => {
+                    this.partsStatus.bh = (doc.data().qty && (doc.data().qty > 0)) ? true : false
+                })
+                parts_collection.doc(this.orderData.turbine.SW).get().then(doc => {
+                    this.partsStatus.sw = (doc.data().qty && (doc.data().qty > 0)) ? true : false
+                })
+                parts_collection.doc(this.orderData.turbine.CW).get().then(doc => {
+                    this.partsStatus.cw = (doc.data().qty && (doc.data().qty > 0)) ? true : false
+                })
+                parts_collection.doc(this.orderData.turbine.Seal_Plates).get().then(doc => {
+                    this.partsStatus.sp = (doc.data().qty && (doc.data().qty > 0)) ? true : false
+                })
+                parts_collection.doc(this.orderData.turbine.CHRA).get().then(doc => {
+                    this.partsStatus.chra = (doc.data().qty && (doc.data().qty > 0)) ? true : false
+                })
                 this.mounted = true
-              })
+            })
             } catch (e) {
             alert(e)
             return
@@ -79,10 +123,12 @@
                   ...this.orderData,
                   status
               });
-          }
+          },
         },
         mounted() {
             this.getOrder()
+            
+            
         }
     }
 </script>
