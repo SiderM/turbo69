@@ -45,7 +45,7 @@
         },
         methods: {
             getParts() {
-                this.$axios.$get('/parts.json').then(response => this.partsList = response)
+                this.$axios.$get('https://turbo69.ru/parts.json').then(response => this.partsList = response)
             },
             selectPart(item) {
                 this.part = item

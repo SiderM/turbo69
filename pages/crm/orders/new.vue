@@ -73,7 +73,7 @@ export default {
         },
   methods: {
       getTurbine() {
-                this.$axios.$get('/turbine.json').then(response => this.turbineList = response)
+                this.$axios.$get('https://turbo69.ru/turbine.json').then(response => this.turbineList = response)
       },
       selectTurbine(item) {
         this.turbine = item
