@@ -11,7 +11,8 @@ export default {
       { hid: 'description', name: 'description', content: '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: "stylesheet", href: "https://unpkg.com/@coreui/coreui/dist/css/coreui.min.css" }
     ]
   },
 
@@ -37,6 +38,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
+    '@nuxtjs/axios',
     [
       '@nuxtjs/firebase',
       {
@@ -55,8 +57,6 @@ export default {
       }
     ]
   ],
-
-  // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }
 }
